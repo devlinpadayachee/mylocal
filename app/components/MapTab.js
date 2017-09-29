@@ -54,13 +54,13 @@ export default class MapTab extends Component {
           region: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.015,
+            latitudeDelta: 0.000,
             longitudeDelta: 0.0121,
           },
           userlocation: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.015,
+            latitudeDelta: 0.000,
             longitudeDelta:  0.0121,
           },
           error: null,
@@ -77,7 +77,7 @@ export default class MapTab extends Component {
           userlocation: {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
-            latitudeDelta: 0.015,
+            latitudeDelta: 0.000,
             longitudeDelta:  0.0121,
           },
           error: null,
@@ -155,7 +155,7 @@ export default class MapTab extends Component {
             latitudeDelta: 0.015,
             longitudeDelta:  0.0121,
           },
-          error: null,
+          error: null
         });
       },
       (error) => this.setState({ error: error.message }),
@@ -327,6 +327,7 @@ mapStyle = [
 let { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     position: 'absolute',
     top: 0,
     left: 0,

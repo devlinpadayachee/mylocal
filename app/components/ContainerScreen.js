@@ -2,7 +2,7 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,AsyncStorage } from 'react-native';
-import { Header,Container,Title,Tabs,Tab,TabHeading,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
+import { Header,Footer,FooterTab,Container,Title,Tabs,Tab,TabHeading,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import MapTab from './MapTab';
 import SuppliersTab from './SuppliersTab';
@@ -22,7 +22,6 @@ export default class ContainerScreen extends Component {
     this.growAnimated = new Animated.Value(0);
   }
   componentDidMount() {
-    console.log(AsyncStorage.getItem('cart'))
     console.log("Component Container Screen Mounted");
   }
   componentWillUnmount() {
@@ -35,8 +34,6 @@ export default class ContainerScreen extends Component {
 			outputRange: [1, SIZE],
 		});
 
-
-    console.log(this.state.loading);
     const isLoading = this.state.loading
 
     let content = null;
@@ -49,17 +46,6 @@ export default class ContainerScreen extends Component {
     }
     else {
         content = <View style={styles.container}>
-                    <Header hasTabs style={styles.header}>
-                      <Left>
-                        <Button transparent>
-                          <Icon name='ios-cog' style={styles.icon}/>
-                        </Button>
-                      </Left>
-                      <Body>
-                        <Title style={styles.headertitle}>My Local </Title>
-                      </Body>
-                      <Right/>
-                    </Header>
                     <Tabs tabBarPosition="bottom" >
                       <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-person-outline"  style={styles.icon}/><Text>Suppliers</Text></TabHeading>}>
                         <SuppliersTab/>
@@ -74,9 +60,22 @@ export default class ContainerScreen extends Component {
                   </View>;
     }
     return (
-      <View style={styles.container}>
-        {content}
-      </View>
+      <Container >
+        <Header hasTabs style={styles.header}>
+          <Left>
+            <Button transparent>
+              <Icon name='ios-cog' style={styles.icon}/>
+            </Button>
+          </Left>
+          <Body>
+            <Title style={styles.headertitle}>My Local </Title>
+          </Body>
+          <Right/>
+        </Header>
+        <View style={styles.container}>
+          {content}
+        </View>
+      </Container>
     );
   }
   _onPressButton = () => {
@@ -86,17 +85,7 @@ export default class ContainerScreen extends Component {
     this.setState({
       loading: true
     });
-    // Log in and display an alert to tell the user what happened.
-    firebaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then(() => {
-        this.setState({loading: false});
-        Alert.alert('Awesome','Account Created')
-        Actions.loginScreen({});
-        console.log('account created');
-    }).catch((error) => {
-        this.setState({loading: false});
-        Alert.alert('Create Account Error',error.message)
-        console.log(error);
-    });
+
   }
   //
   // // Go to the signup page
@@ -111,8 +100,11 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
+
   container: {
-  	flex : 1
+  	flex : 1,
+    backgroundColor : '#fff',
+    justifyContent: 'center'
 	},
   headertitle : {
     fontSize : 15,

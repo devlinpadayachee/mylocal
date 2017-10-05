@@ -12,7 +12,7 @@ class CartListItem extends Component {
     console.log(this.props)
     return (
 
-      <ListItem onPress={() => {Actions.productdetailsScreen({product:this.props.item.product})}}>
+      <ListItem key={this.props.id} onPress={() => {Actions.productdetailsScreen({product:this.props.item.product})}}>
             <Thumbnail square size={40} source={{uri : this.props.item.product.imageUrl}} style={styles.thumbnail}/>
             <Body>
               <Text style={styles.product_name}>{this.props.item.product.name}</Text>

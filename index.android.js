@@ -17,14 +17,10 @@ export default class mylocal extends Component {
   render() {
     return (
       <Root>
-
-        <Container style={styles.container}>
           <StatusBar
              backgroundColor="#2c3e50"
-             barStyle="light-content"
           />
           <Main />
-        </Container>
       </Root>
     );
   }

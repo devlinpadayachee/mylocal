@@ -9,7 +9,6 @@ class SupplierListItem extends Component {
    super(props)
   }
   render() {
-    console.log(this.props)
     return (
 
       <ListItem onPress={() => {Actions.productScreen({supplier_name:this.props.item.name,supplier_id:this.props.id})}}>
@@ -30,6 +29,7 @@ class SupplierListItem extends Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor : '#fff',
   },
   supplier_name: {
     color : '#2c3e50',

@@ -12,11 +12,14 @@ class ProductListItem extends Component {
     //console.log(this.props)
     return (
 
-      <ListItem onPress={() => {Actions.productdetailsScreen({product:this.props.item})}}>
+      <ListItem key={this.props.id} onPress={() => {Actions.productdetailsScreen({product:this.props.item})}}>
             <Thumbnail square size={40} source={{uri : this.props.item.imageUrl}} style={styles.thumbnail}/>
             <Body>
               <Text style={styles.product_name}>{this.props.item.name}</Text>
+              <Text style={styles.product_name}>Item Code: {this.props.id}</Text>
+              <Text style={styles.product_name}>Supplier Code: {this.props.item.supplier_sku}</Text>
               <Text style={styles.product_details_muted}>In Stock</Text>
+
               <Text style={styles.product_name}>Price: R{this.props.item.price} </Text>
             </Body>
             <Right>

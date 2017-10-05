@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';  // Initialize Firebase
   var fireBaseconfig = {
-    apiKey: "AIzaSyDVNVtiAbj43je3tEhlF1iP6R6sfFU2QIE",
+    apiKey: "AIzaSyBGIkEWrwK00bfkurE5nVuMwNxYbT_wWr0",
     authDomain: "mylocal-97b23.firebaseapp.com",
     databaseURL: "https://mylocal-97b23.firebaseio.com",
     projectId: "mylocal-97b23",

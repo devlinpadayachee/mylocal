@@ -21,7 +21,7 @@ export default class Main extends Component {
 	        />
           <Scene key="containerScreen"
 	          component={ContainerScreen}
-	          animation='fade'
+	          animation='bounce'
 	          hideNavBar={true}
 	        />
           <Scene key="productScreen"

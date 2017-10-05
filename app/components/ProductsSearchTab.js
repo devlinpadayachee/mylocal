@@ -39,6 +39,10 @@ export default class ProductsSearchTab extends Component {
           name: child.val().name,
           price : child.val().price,
           imageUrl : child.val().imageUrl,
+          category : child.val().category,
+          features : child.val().features,
+          description : child.val().description,
+          supplier_sku : child.val().supplier_sku,
         });
       });
       this.setState({
@@ -84,13 +88,14 @@ export default class ProductsSearchTab extends Component {
                         placeholder="Search for a Product"
                         onChangeText={text => this.setState({ query: text })}
                         data={data}
+                        hideResults={true}
                         renderItem={data => (
                           <TouchableOpacity onPress={() => this.setState({ query: data.name })}>
                             <Text>{data.name}</Text>
                           </TouchableOpacity>
                         )}
                       />
-                      <FlatList style= {styles.listContainer} data={this.state.data} renderItem={this.renderProductItem}/>
+                      <FlatList style= {styles.listContainer} data={data} renderItem={this.renderProductItem}/>
                   </View>;
     }
     return (

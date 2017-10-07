@@ -16,11 +16,11 @@ class ProductListItem extends Component {
             <Thumbnail square size={40} source={{uri : this.props.item.imageUrl}} style={styles.thumbnail}/>
             <Body>
               <Text style={styles.product_name}>{this.props.item.name}</Text>
-              <Text style={styles.product_name}>Item Code: {this.props.id}</Text>
-              <Text style={styles.product_name}>Supplier Code: {this.props.item.supplier_sku}</Text>
-              <Text style={styles.product_details_muted}>In Stock</Text>
+              <Text style={styles.details_muted}>Item Code: {this.props.id}</Text>
+              <Text style={styles.details_muted}>Supplier Code: {this.props.item.supplier_sku}</Text>
+              <Text style={styles.details_muted_green}>In Stock</Text>
 
-              <Text style={styles.product_name}>Price: R{this.props.item.price} </Text>
+              <Text style={styles.details_muted}>Price: R{this.props.item.price} </Text>
             </Body>
             <Right>
               <Icon name='ios-add' style={styles.icon}/>
@@ -36,11 +36,17 @@ var styles = StyleSheet.create({
   },
   product_name: {
     color : '#2c3e50',
+    opacity : 1,
+    fontSize : 13,
+    fontWeight : '700'
+  },
+  details_muted: {
+    color : '#2c3e50',
     opacity : 0.9,
     fontSize : 12,
     fontWeight : '400'
   },
-  product_details_muted: {
+  details_muted_green: {
     opacity : 0.9,
     fontSize : 12,
     color : '#27ae60',

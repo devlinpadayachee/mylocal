@@ -18,6 +18,7 @@ export default class ProductDetailsScreen extends Component {
       quantity_value: 1,
       cart_item_count: null
     }
+    console.log("Constructed")
     this.growAnimated = new Animated.Value(0);
   }
   async componentDidMount() {
@@ -29,6 +30,7 @@ export default class ProductDetailsScreen extends Component {
   componentWillUnmount() {
     console.log("Product Details Screen UnMounted");
   }
+
 
   render() {
 
@@ -124,7 +126,7 @@ export default class ProductDetailsScreen extends Component {
       <Container>
         <Header hasTabs style={styles.header}>
           <Left>
-            <Button transparent  onPress={() => Actions.pop()} >
+            <Button transparent  onPress={() => Actions.pop({refresh:{test:Math.random()}})} >
               <Icon name='ios-arrow-back'/>
             </Button>
           </Left>

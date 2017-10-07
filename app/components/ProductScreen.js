@@ -33,6 +33,12 @@ export default class ProductScreen extends Component {
   componentWillUnmount() {
     console.log("Product Container Screen UnMounted");
   }
+  async componentWillReceiveProps(nextProps){
+    this.setState({loading: true})
+    console.log(nextProps);
+    let cart_item_count = await cart.getCartCount();
+    this.setState({loading: false,cart_item_count:cart_item_count})
+  }
   getRef() {
     return firebaseApp.database().ref();
   }
@@ -97,7 +103,7 @@ export default class ProductScreen extends Component {
         let tablist = categories.map(function(category, index){
 
             let renderProductItem = ({item}) => (
-              <ProductListItem id={item.key} item={item}/>
+              <ProductListItem key={item.key} id={item.key} item={item} keyExtractor={(item, index) => index}/>
             );
             // let categoryheading = category.toUpperCase();
             return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading={category.toUpperCase()}>
@@ -117,7 +123,7 @@ export default class ProductScreen extends Component {
       <Container>
         <Header hasTabs style={styles.header}>
           <Left>
-            <Button transparent  onPress={() => Actions.pop()} >
+            <Button transparent  onPress={() => Actions.pop({refresh:{test:Math.random()}})} >
               <Icon name='ios-arrow-back'/>
             </Button>
           </Left>

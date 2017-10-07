@@ -19,7 +19,7 @@ export default class ProductsSearchTab extends Component {
     }
     this.productsRef = this.getRef().child('products');
   }
-  componentDidMount() {
+  async componentDidMount() {
     console.log("Did Mount: Setting Initial State of Product Search");
     this.listenForProducts(this.productsRef);
   }

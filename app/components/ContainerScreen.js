@@ -11,21 +11,33 @@ import usernameImg from '../images/username.png';
 import passwordImg from '../images/password.png';
 import arrowImg from '../images/left-arrow.png';
 import firebaseApp from '../js/FirebaseApp';
+import * as cart from '../js/Cart';
 const SIZE = 40;
 export default class ContainerScreen extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      loading: false
+      loading: false,
+      cart_item_count : null
     }
     this.growAnimated = new Animated.Value(0);
   }
-  componentDidMount() {
+  async componentDidMount() {
+    this.setState({loading: true})
     console.log("Component Container Screen Mounted");
+    let cart_item_count = await cart.getCartCount();
+    this.setState({loading: false,cart_item_count:cart_item_count})
+    this.listenForProducts(this.productsRef);
   }
   componentWillUnmount() {
     console.log("Component Container Screen UnMounted");
+  }
+  async componentWillReceiveProps(nextProps){
+    this.setState({loading: true})
+    console.log(nextProps);
+    let cart_item_count = await cart.getCartCount();
+    this.setState({loading: false,cart_item_count:cart_item_count})
   }
   render() {
 
@@ -47,13 +59,13 @@ export default class ContainerScreen extends Component {
     else {
         content = <View style={styles.container}>
                     <Tabs tabBarPosition="bottom" >
-                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-person-outline"  style={styles.icon}/><Text>Suppliers</Text></TabHeading>}>
+                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-person-outline"  style={styles.icon}/></TabHeading>}>
                         <SuppliersTab/>
                       </Tab>
-                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-barcode-outline"  style={styles.icon}/><Text>Products</Text></TabHeading>}>
+                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-barcode-outline"  style={styles.icon}/></TabHeading>}>
                         <ProductsSearchTab/>
                       </Tab>
-                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-pin-outline"  style={styles.icon}/><Text>Near Me</Text></TabHeading>}>
+                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-pin-outline"  style={styles.icon}/></TabHeading>}>
                         <MapTab/>
                       </Tab>
                     </Tabs>
@@ -70,7 +82,14 @@ export default class ContainerScreen extends Component {
           <Body>
             <Title style={styles.headertitle}>My Local </Title>
           </Body>
-          <Right/>
+          <Right>
+            <Button transparent  onPress={() => Actions.checkoutScreen()} >
+              <Icon name='ios-cart'/>
+              <Text style={{marginLeft : 10}}>
+                {this.state.cart_item_count}
+              </Text>
+            </Button>
+          </Right>
         </Header>
         <View style={styles.container}>
           {content}

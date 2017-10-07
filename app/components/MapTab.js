@@ -40,7 +40,7 @@ export default class MapTab extends Component {
   //     error: null
   //   };
   // }
-  componentDidMount() {
+  async componentDidMount() {
     console.log("Did Mount: Setting Initial State of Map")
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -61,7 +61,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
     );
 
     this.watchId = navigator.geolocation.watchPosition(
@@ -78,7 +78,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
 
   }
@@ -153,7 +153,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
     );
   }
 }

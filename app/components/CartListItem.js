@@ -9,16 +9,16 @@ class CartListItem extends Component {
    super(props)
   }
   render() {
-    console.log(this.props)
+    console.log(this.props.item.product.name)
     return (
 
-      <ListItem key={this.props.id} onPress={() => {Actions.productdetailsScreen({product:this.props.item.product})}}>
+      <ListItem  onPress={() => {Actions.productdetailsScreen({product:this.props.item.product})}}>
             <Thumbnail square size={40} source={{uri : this.props.item.product.imageUrl}} style={styles.thumbnail}/>
             <Body>
               <Text style={styles.product_name}>{this.props.item.product.name}</Text>
-              <Text style={styles.product_details_muted}>Quantity: {this.props.item.quantity} </Text>
-              <Text style={styles.product_name}>Price: R{this.props.item.product.price} per unit </Text>
-              <Text style={styles.product_name}>Total: R{this.props.item.total} ({this.props.item.quantity}) </Text>
+              <Text style={styles.details_muted_green}>Quantity: {this.props.item.quantity} </Text>
+              <Text style={styles.details_muted}>Price: R{this.props.item.product.price} per unit </Text>
+              <Text style={styles.details_muted}>Total: R{this.props.item.total} ({this.props.item.quantity}) </Text>
             </Body>
             <Right>
               <Icon name='ios-remove' style={styles.icon}/>
@@ -35,11 +35,17 @@ var styles = StyleSheet.create({
   },
   product_name: {
     color : '#2c3e50',
+    opacity : 1,
+    fontSize : 13,
+    fontWeight : '700'
+  },
+  details_muted: {
+    color : '#2c3e50',
     opacity : 0.9,
     fontSize : 12,
     fontWeight : '400'
   },
-  product_details_muted: {
+  details_muted_green: {
     opacity : 0.9,
     fontSize : 12,
     color : '#27ae60',

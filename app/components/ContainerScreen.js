@@ -12,7 +12,6 @@ import passwordImg from '../images/password.png';
 import arrowImg from '../images/left-arrow.png';
 import firebaseApp from '../js/FirebaseApp';
 import * as cart from '../js/Cart';
-const SIZE = 40;
 export default class ContainerScreen extends Component {
 
   constructor(props){
@@ -21,14 +20,12 @@ export default class ContainerScreen extends Component {
       loading: false,
       cart_item_count : null
     }
-    this.growAnimated = new Animated.Value(0);
   }
   async componentDidMount() {
     this.setState({loading: true})
     console.log("Component Container Screen Mounted");
     let cart_item_count = await cart.getCartCount();
     this.setState({loading: false,cart_item_count:cart_item_count})
-    this.listenForProducts(this.productsRef);
   }
   componentWillUnmount() {
     console.log("Component Container Screen UnMounted");
@@ -40,11 +37,6 @@ export default class ContainerScreen extends Component {
     this.setState({loading: false,cart_item_count:cart_item_count})
   }
   render() {
-
-    const changeScale = this.growAnimated.interpolate({
-			inputRange: [0, 1],
-			outputRange: [1, SIZE],
-		});
 
     const isLoading = this.state.loading
 
@@ -74,7 +66,7 @@ export default class ContainerScreen extends Component {
     return (
       <Container >
         <Header hasTabs style={styles.header}>
-          <Left>
+          <Left style={styles.headerleft}>
             <Button transparent>
               <Icon name='ios-cog' style={styles.icon}/>
             </Button>
@@ -131,6 +123,9 @@ const styles = StyleSheet.create({
   header:{
     height : 70,
     backgroundColor : '#2c3e50',
+  },
+  headerleft:{
+    maxWidth : 40
   },
   tab:{
     backgroundColor : '#2c3e50',

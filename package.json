@@ -16,8 +16,12 @@
     "react": "16.0.0-alpha.12",
     "react-native": "0.47.2",
     "react-native-autocomplete-input": "^3.3.1",
+    "react-native-credit-card": "^0.1.9",
+    "react-native-linear-gradient": "^2.3.0",
     "react-native-maps": "^0.16.4",
-    "react-native-router-flux": "^4.0.0-beta.21"
+    "react-native-multistep-wizard": "0.0.1",
+    "react-native-router-flux": "^4.0.0-beta.21",
+    "react-native-swiper": "^1.5.13"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",

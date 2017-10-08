@@ -1,14 +1,14 @@
 /* @Boiler React Component */
 'use strict';
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
+import { StyleSheet, ScrollView,View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
 import { Header,Grid,Col,Container, Footer,FooterTab,Title,Tabs,Tab,TabHeading,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import firebaseApp from '../js/FirebaseApp';
 import CartListItem from './CartListItem';
 import * as cart from '../js/Cart';
 var _ = require('lodash')
-const SIZE = 40;
+
 export default class CartSummaryScreen extends Component {
 
   constructor(props){
@@ -16,10 +16,10 @@ export default class CartSummaryScreen extends Component {
     this.state = {
       loading: false,
       data : [],
-      cart_item_count : null,
+      cart_item_count : 0,
       total : 0
     }
-    this.growAnimated = new Animated.Value(0);
+    console.log(props)
   }
   async componentDidMount() {
     this.setState({loading: true})
@@ -36,12 +36,13 @@ export default class CartSummaryScreen extends Component {
   renderCartItem = ({item}) => (
     <CartListItem item={item}/>
   );
-  render() {
 
-    const changeScale = this.growAnimated.interpolate({
-			inputRange: [0, 1],
-			outputRange: [1, SIZE],
-		});
+  nextPreprocess() {
+    console.log(this.props)
+    this.props.nextFn()
+  }
+
+  render() {
 
     const isLoading = this.state.loading;
     const cart_item_count = this.state.cart_item_count;
@@ -70,41 +71,36 @@ export default class CartSummaryScreen extends Component {
                   </View>
     }
     else {
-        content = <View style={styles.container}>
-                      <FlatList data={this.state.data} renderItem={this.renderCartItem} keyExtractor={(item, index) => index}/>
+        content = <View>
+                    <View>
+                      <Grid>
+                        <Col style={styles.col_details}>
+                          <Text style={styles.col_header_text} >
+                            You are about to make a purchase of R{this.state.total}
+                          </Text>
+                          <Text style={styles.col_default_text}>
+                            The following order items are in your cart
+                          </Text>
+                        </Col>
+                        <Col style={styles.col_details}>
+                          <Button  onPress={this.props.nextFn} full success><Text style={styles.proceedButtons}> Proceed to payment</Text><Icon name='ios-arrow-forward'/></Button>
+                        </Col>
+                      </Grid>
+                    </View>
+
+                    <FlatList style={{backgroundColor:'#FFF'}} data={this.state.data} renderItem={this.renderCartItem} keyExtractor={(item, index) => index}/>
+
                   </View>;
     }
     return (
-      <Container>
-        <Header hasTabs style={styles.header}>
-          <Left>
-            <Button transparent  onPress={() => Actions.pop()} >
-              <Icon name='ios-arrow-back'/>
-            </Button>
-          </Left>
-          <Body>
-            <Title style={styles.headertitle}>Checkout</Title>
-          </Body>
-          <Right>
-            <View>
-              <Text style={styles.total_container}>R{this.state.total}</Text>
-            </View>
-          </Right>
-        </Header>
-        <Content>
+        <ScrollView>
           {content}
-        </Content>
-        {this.state.cart_item_count > 0 &&
-          <Footer>
-            <FooterTab>
-              <Button  onPress={this.addtoCart} full success><Text style={styles.submitOrderButton}> Submit Order </Text></Button>
-            </FooterTab>
-          </Footer>
-        }
-      </Container>
+        </ScrollView>
     );
   }
 }
+
+
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
@@ -118,6 +114,20 @@ const styles = StyleSheet.create({
   header:{
     height : 70,
     backgroundColor : '#2c3e50',
+    opacity : 0.9
+  },
+  buttonGroup : {
+    flex : 1,
+    flexDirection : 'row',
+
+    backgroundColor : '#2c3e50'
+  },
+  proceedButtons : {
+    color : '#fff',
+    alignItems : 'center',
+    justifyContent :'center',
+    marginRight : 10,
+    fontSize : 12,
   },
   submitOrderButton : {
     color : '#fff',

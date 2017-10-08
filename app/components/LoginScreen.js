@@ -39,7 +39,7 @@ export default class LoginScreen extends Component {
                 <Button transparent primary onPress={this.signUp}>
                    <Text>Create Account</Text>
                 </Button>
-                <Button transparent primary onPress={this.signUp}>
+                <Button transparent primary onPress={this.forgotpassword}>
                    <Text>Forgot Password?</Text>
                 </Button>
               </View>
@@ -51,6 +51,11 @@ export default class LoginScreen extends Component {
   signUp = () => {
     console.log("Moving to Signup Screen");
     Actions.signupScreen({data: "Custom data2", title: "Custom title2"});
+  }
+
+  forgotpassword = () => {
+    console.log("Moving to Forgot Screen");
+    Actions.forgotpasswordScreen({data: "Custom data2", title: "Custom title2"});
   }
 }
 

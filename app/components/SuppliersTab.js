@@ -8,7 +8,6 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Dimensions, Alert,FlatList,ActivityIndicator} from 'react-native';
 import { Container, Header, Title, Content, Footer,ScrollableTab, FooterTab, Button, Left, Right, Body, Icon, Text, Tab, Tabs, TabHeading, Fab,Toast } from 'native-base';
 import SupplierListItem from './SupplierListItem';
-import MapView from 'react-native-maps';
 import firebaseApp from '../js/FirebaseApp';
 export default class SuppliersTab extends Component {
 
@@ -22,8 +21,14 @@ export default class SuppliersTab extends Component {
     }
   }
   async componentDidMount() {
-    console.log("Did Mount: Setting Initial State of Suppliers");
-    this.listenForSuppliers(this.suppliersRef);
+    try{
+      console.log("Did Mount: Setting Initial State of Suppliers");
+      this.listenForSuppliers(this.suppliersRef);
+    }
+    catch(error){
+      console.log(error);
+    }
+
   }
   componentWillUnmount() {
   }
@@ -53,8 +58,6 @@ export default class SuppliersTab extends Component {
 
       suppliers_offering_delivery = _.groupBy(suppliers, supplier => supplier.offeringDelivery);
       suppliers_offering_delivery_categories = _.keys(suppliers_offering_delivery);
-      console.log(suppliers_offering_delivery)
-      console.log(suppliers_offering_delivery_categories)
       this.setState({
         data: suppliers,
         suppliers_offering_delivery : suppliers_offering_delivery,
@@ -65,7 +68,7 @@ export default class SuppliersTab extends Component {
 
 
   renderSupplierItem = ({item}) => (
-    <SupplierListItem id={item.key} item={item}/>
+      <SupplierListItem key={item.key} id={item.key} item={item}/>
   );
 
 
@@ -74,9 +77,7 @@ export default class SuppliersTab extends Component {
     const isLoading = this.state.loading
     let suppliers_offering_delivery = this.state.suppliers_offering_delivery;
     let suppliers_offering_delivery_categories = this.state.suppliers_offering_delivery_categories;
-    console.log(suppliers_offering_delivery_categories)
     let suppliers = this.state.data;
-    console.log("Will now try to render suppliers tab");
     let content = null;
 
     if (isLoading) {
@@ -88,21 +89,16 @@ export default class SuppliersTab extends Component {
 
     else {
 
-      content = <View style={styles.container}>
-                  <ActivityIndicator size="large"/>
-                </View>
         let supplierlist = suppliers_offering_delivery_categories.map(function(offering_delivery_category, index){
 
-            console.log(offering_delivery_category);
-
             renderSupplierItem = ({item}) => (
-              <SupplierListItem id={item.key} item={item}/>
+              <SupplierListItem key={item.key} id={item.key} item={item}/>
             );
             // let categoryheading = category.toUpperCase();
             if (offering_delivery_category == "yes")
             {
-              return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading="DELIVERY">
-                        <FlatList data={suppliers_offering_delivery[offering_delivery_category]} renderItem={renderSupplierItem} keyExtractor={(item, index) => index}/>
+              return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading="DELIVERY" key={index}>
+                        <FlatList data={suppliers_offering_delivery[offering_delivery_category]} renderItem={renderSupplierItem} keyExtractor={(item, index) => item.key}/>
                      </Tab>
 
             }

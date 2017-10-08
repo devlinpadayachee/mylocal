@@ -20,8 +20,15 @@ export default class ProductsSearchTab extends Component {
     this.productsRef = this.getRef().child('products');
   }
   async componentDidMount() {
-    console.log("Did Mount: Setting Initial State of Product Search");
-    this.listenForProducts(this.productsRef);
+    try{
+      console.log("Did Mount: Setting Initial State of Product Search");
+      this.listenForProducts(this.productsRef);
+
+    }
+    catch(error){
+      console.log(error)
+    }
+
   }
   componentWillUnmount() {
     console.log("Product Search Screen UnMounted");
@@ -51,7 +58,7 @@ export default class ProductsSearchTab extends Component {
     });
   }
   renderProductItem = ({item}) => (
-    <ProductListItem id={item.key} item={item}/>
+    <ProductListItem key={item.key} id={item.key} item={item}/>
   );
 
   _filterData(query) {
@@ -95,7 +102,7 @@ export default class ProductsSearchTab extends Component {
                           </TouchableOpacity>
                         )}
                       />
-                      <FlatList style= {styles.listContainer} data={data} renderItem={this.renderProductItem}/>
+                      <FlatList style= {styles.listContainer} data={data} renderItem={this.renderProductItem} keyExtractor={(item, index) => index}/>
                   </View>;
     }
     return (

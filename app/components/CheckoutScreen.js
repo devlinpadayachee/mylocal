@@ -1,14 +1,18 @@
 /* @Boiler React Component */
 'use strict';
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
+import { StyleSheet, View,ScrollView, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
 import { Header,Grid,Col,Container, Footer,FooterTab,Title,Tabs,Tab,TabHeading,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import firebaseApp from '../js/FirebaseApp';
 import CartListItem from './CartListItem';
+import MultiStep from 'react-native-multistep-wizard'
+import CartSummaryScreen from './CartSummaryScreen'
+import CartPaymentScreen from './CartPaymentScreen'
 import * as cart from '../js/Cart';
 var _ = require('lodash')
-const SIZE = 40;
+const steps = [{name: 'CartSummaryScreen', component: <CartSummaryScreen/>},{name: 'CartPaymentScreen', component: <CartPaymentScreen/>}];
+
 export default class CheckoutScreen extends Component {
 
   constructor(props){
@@ -16,35 +20,20 @@ export default class CheckoutScreen extends Component {
     this.state = {
       loading: false,
       data : [],
-      cart_item_count : null,
       total : 0
     }
-    this.growAnimated = new Animated.Value(0);
   }
   async componentDidMount() {
-    this.setState({loading: true})
-    console.log("Checkout Screen Mounted");
-    let current_cart = await cart.getCart();
-    let total = _.sumBy(current_cart, 'total');
-    let cart_item_count = await cart.getCartCount();
-    this.setState({loading: false,data:current_cart,total:total,cart_item_count:cart_item_count})
+
   }
   componentWillUnmount() {
     console.log("Checkout Screen UnMounted");
   }
 
-  renderCartItem = ({item}) => (
-    <CartListItem item={item}/>
-  );
+
   render() {
 
-    const changeScale = this.growAnimated.interpolate({
-			inputRange: [0, 1],
-			outputRange: [1, SIZE],
-		});
-
     const isLoading = this.state.loading;
-    const cart_item_count = this.state.cart_item_count;
 
     let content = null;
 
@@ -54,53 +43,25 @@ export default class CheckoutScreen extends Component {
                     <ActivityIndicator size="large"/>
                   </View>
     }
-    else if (cart_item_count == 0) {
 
-        content = <View style={styles.container}>
-                    <Grid>
-                      <Col style={styles.col_details}>
-                        <Text style={styles.col_header_text} >
-                          No items in your cart
-                        </Text>
-                        <Text style={styles.col_default_text}>
-                          Please add an item to your cart in order to checkout.
-                        </Text>
-                      </Col>
-                    </Grid>
-                  </View>
-    }
     else {
-        content = <View style={styles.container}>
-                      <FlatList data={this.state.data} renderItem={this.renderCartItem} keyExtractor={(item, index) => index}/>
-                  </View>;
+        content =  <MultiStep steps={steps} onFinish={this.finish}/>;
     }
     return (
       <Container>
-        <Header hasTabs style={styles.header}>
-          <Left>
+        <Header style={styles.header}>
+          <Left style={styles.headerleft}>
             <Button transparent  onPress={() => Actions.pop()} >
               <Icon name='ios-arrow-back'/>
             </Button>
           </Left>
-          <Body>
+          <Body style={styles.headerbody}>
             <Title style={styles.headertitle}>Checkout</Title>
           </Body>
-          <Right>
-            <View>
-              <Text style={styles.total_container}>R{this.state.total}</Text>
-            </View>
-          </Right>
         </Header>
-        <Content>
+        <ScrollView>
           {content}
-        </Content>
-        {this.state.cart_item_count > 0 &&
-          <Footer>
-            <FooterTab>
-              <Button  onPress={this.addtoCart} full success><Text style={styles.submitOrderButton}> Submit Order </Text></Button>
-            </FooterTab>
-          </Footer>
-        }
+        </ScrollView>
       </Container>
     );
   }
@@ -116,8 +77,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
 	},
   header:{
+    justifyContent  :"space-between",
     height : 70,
     backgroundColor : '#2c3e50',
+  },
+  headerleft:{
+    maxWidth : 40
   },
   submitOrderButton : {
     color : '#fff',

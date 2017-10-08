@@ -11,37 +11,25 @@ class SupplierListItem extends Component {
   }
   render() {
 
-    //.format('HH:mm')
-    console.log(this.props.item);
     let current_time =  moment();
-    console.log(typeof current_time)
     let supplier_opening_time = moment(this.props.item.opens+":"+this.props.item.opensMins,"HH:mm A");
     let supplier_closing_time = moment(this.props.item.closes+":"+this.props.item.closesMins,"HH:mm A");
     let item_border_color  = null;
     let open_closed_color  = null;
-    // console.log(current_time.format('HH:mm'),supplier_opening_time.format('HH:mm'),supplier_closing_time.format('HH:mm'));
     if (current_time.isBetween(supplier_opening_time, supplier_closing_time)) {
       item_border_color = '#27ae60';
       open_closed_color = '#27ae60';
       open_closed_text = "Open";
-      console.log('is between')
-
 
     } else {
       item_border_color = '#c0392b';
       open_closed_color = '#c0392b';
       open_closed_text = "Closed";
-      console.log('is not between')
-
     }
-    //
-    // if (current_time > this.props.item.opens && current_time < this.props.item.closes) {
-    //
-    //
-    // }
+
     return (
 
-      <ListItem style={{borderRightWidth: 7,borderRightColor:item_border_color}} onPress={() => {Actions.productScreen({supplier_name:this.props.item.name,supplier_id:this.props.id})}}>
+      <ListItem key={this.props.id} style={{borderRightWidth: 7,borderRightColor:item_border_color}} onPress={() => {Actions.productScreen({supplier_name:this.props.item.name,supplier_id:this.props.id})}}>
             <Thumbnail square size={35} source={require('../images/wallpaper.jpg')} />
             <Body>
               <Text style={styles.supplier_name}>{this.props.item.name}</Text>

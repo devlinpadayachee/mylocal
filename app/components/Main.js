@@ -4,6 +4,7 @@ import { Router, Scene, Actions, ActionConst } from 'react-native-router-flux';
 import LoginScreen from './LoginScreen';
 import ContainerScreen from './ContainerScreen';
 import SignupScreen from './SignupScreen';
+import ForgotPasswordScreen from './ForgotPasswordScreen';
 import ProductScreen from './ProductScreen';
 import ProductDetailsScreen from './ProductDetailsScreen';
 import CheckoutScreen from './CheckoutScreen';
@@ -44,6 +45,12 @@ export default class Main extends Component {
 	          animation='bounce'
 	          hideNavBar={true}
             title="Register"
+	        />
+          <Scene key="forgotpasswordScreen"
+	          component={ForgotPasswordScreen}
+	          animation='bounce'
+	          hideNavBar={true}
+            title="Forgot Password"
 	        />
 	      </Scene>
 	    </Router>

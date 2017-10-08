@@ -125,7 +125,7 @@ export default class ProductDetailsScreen extends Component {
     return (
       <Container>
         <Header hasTabs style={styles.header}>
-          <Left>
+          <Left style={styles.headerleft}>
             <Button transparent  onPress={() => Actions.pop({refresh:{test:Math.random()}})} >
               <Icon name='ios-arrow-back'/>
             </Button>
@@ -208,6 +208,9 @@ const styles = StyleSheet.create({
   header:{
     height : 70,
     backgroundColor : '#2c3e50',
+  },
+  headerleft:{
+    maxWidth : 40
   },
   headertitle : {
     fontSize : 15,

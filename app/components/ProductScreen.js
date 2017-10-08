@@ -2,7 +2,7 @@
 'use strict';
 import React, { Component, PropTypes } from 'react';
 import { StyleSheet, View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList } from 'react-native';
-import { Header,Container, Title,Tabs,Tab,TabHeading,ScrollableTab ,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
+import { Header,Container, Grid,Col,Title,Tabs,Tab,TabHeading,ScrollableTab ,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import firebaseApp from '../js/FirebaseApp';
 import ProductListItem from './ProductListItem';
@@ -65,7 +65,7 @@ export default class ProductScreen extends Component {
 
       products_by_category = _.groupBy(products, product => product.category);
       categories = _.keys(products_by_category);
-      // console.log(products_by_category);
+      console.log(products);
       console.log(categories);
 
       this.setState({
@@ -76,7 +76,7 @@ export default class ProductScreen extends Component {
     });
   }
   renderProductItem = ({item}) => (
-    <ProductListItem key={item.key} item={item}/>
+    <ProductListItem key={item.key} id={item.key}  item={item}/>
   );
   render() {
 
@@ -91,27 +91,45 @@ export default class ProductScreen extends Component {
     console.log("Will now try to render products_by_category var");
     // console.log(products_by_category)
     let content = null;
-
+    console.log(this.state.data.length)
     if (isLoading) {
 
         content = <View style={styles.container}>
                     <ActivityIndicator size="large"/>
                   </View>
     }
+    else if (this.state.data.length == 0) {
+        console.log("setting no product")
+        content = <View style={styles.container}>
+                    <Grid>
+                      <Col style={styles.col_details}>
+                        <Text style={styles.col_header_text} >
+                          This Supplier does not have any items loaded
+                        </Text>
+                        <Text style={styles.col_default_text}>
+                          Please return to the supplier list and try again
+                        </Text>
+                      </Col>
+                    </Grid>
+                  </View>
+    }
     else {
 
         let tablist = categories.map(function(category, index){
 
-            let renderProductItem = ({item}) => (
-              <ProductListItem key={item.key} id={item.key} item={item} keyExtractor={(item, index) => index}/>
-            );
+            let renderProductItem = ({item}) => {
+              console.log(item);
+              return (
+                  <ProductListItem key={item.key} id={item.key} item={item}/>
+                )
+            };
             // let categoryheading = category.toUpperCase();
-            return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading={category.toUpperCase()}>
-                      <FlatList data={products_by_category[category]} renderItem={renderProductItem} keyExtractor={(item, index) => index}/>
+            return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading={category.toUpperCase()} key={index}>
+                      <FlatList data={products_by_category[category]} renderItem={renderProductItem} keyExtractor={(item, index) => item.key}/>
                    </Tab>
         })
 
-        content = <View style={styles.container}>
+        content = <View>
 
                     <Tabs renderTabBar={()=> <ScrollableTab />}>
                       {tablist}
@@ -122,7 +140,7 @@ export default class ProductScreen extends Component {
     return (
       <Container>
         <Header hasTabs style={styles.header}>
-          <Left>
+          <Left style={styles.headerleft}>
             <Button transparent  onPress={() => Actions.pop({refresh:{test:Math.random()}})} >
               <Icon name='ios-arrow-back'/>
             </Button>
@@ -163,6 +181,9 @@ const styles = StyleSheet.create({
     height : 70,
     backgroundColor : '#2c3e50',
   },
+  headerleft:{
+    maxWidth : 40
+  },
   headertitle : {
     fontSize : 15,
   },
@@ -175,5 +196,23 @@ const styles = StyleSheet.create({
     flex : 1,
     backgroundColor : '#2c3e50',
     opacity : 0.8,
-  }
+  },
+  col_details : {
+    alignItems : 'center',
+    padding : 10,
+    justifyContent : 'center',
+    backgroundColor : '#ecf0f1'
+  },
+  col_default_text: {
+    color : '#2c3e50',
+    opacity : 0.9,
+    fontSize : 12,
+    fontWeight : '400'
+  },
+  col_header_text: {
+    color : '#2c3e50',
+    opacity : 0.9,
+    fontSize : 13,
+    fontWeight : '500'
+  },
 });

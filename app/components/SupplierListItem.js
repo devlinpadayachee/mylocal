@@ -48,7 +48,6 @@ class SupplierListItem extends Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor : '#fff',
   },
   supplier_name: {
     color : '#2c3e50',

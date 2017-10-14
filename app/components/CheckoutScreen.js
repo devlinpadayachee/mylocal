@@ -1,7 +1,7 @@
 /* @Boiler React Component */
 'use strict';
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, View,ScrollView, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
+import { StyleSheet, View, Dimensions, Alert, ActivityIndicator,TouchableOpacity,Image,TextInput, StatusBar,Animated,Easing,FlatList,AsyncStorage } from 'react-native';
 import { Header,Grid,Col,Container, Footer,FooterTab,Title,Tabs,Tab,TabHeading,Left,Right,Body, Content, List, ListItem, InputGroup, Input, Icon, Text, Picker, Button } from 'native-base';
 import { Actions } from 'react-native-router-flux';
 import firebaseApp from '../js/FirebaseApp';
@@ -48,7 +48,9 @@ export default class CheckoutScreen extends Component {
         content =  <MultiStep steps={steps} onFinish={this.finish}/>;
     }
     return (
-      <Container>
+
+      <Container style={{backgroundColor:'#27ae60'}}>
+        <Image style={styles.background} source={require('../images/background.png')} resizeMode={'cover'} />
         <Header style={styles.header}>
           <Left style={styles.headerleft}>
             <Button transparent  onPress={() => Actions.pop()} >
@@ -59,9 +61,9 @@ export default class CheckoutScreen extends Component {
             <Title style={styles.headertitle}>Checkout</Title>
           </Body>
         </Header>
-        <ScrollView>
+        <Content style={styles.containerc}>
           {content}
-        </ScrollView>
+        </Content>
       </Container>
     );
   }
@@ -75,6 +77,18 @@ const styles = StyleSheet.create({
   	flex : 1,
     backgroundColor : '#fff',
     justifyContent: 'center'
+	},
+  background: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: DEVICE_WIDTH,
+        height: DEVICE_HEIGHT
+  },
+  containerc: {
+  	flex : 1,
 	},
   header:{
     justifyContent  :"space-between",

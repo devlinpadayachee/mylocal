@@ -83,11 +83,10 @@ export default class CartSummaryScreen extends Component {
                           </Text>
                         </Col>
                         <Col style={styles.col_details}>
-                          <Button  onPress={this.props.nextFn} full success><Text style={styles.proceedButtons}> Proceed to payment</Text><Icon name='ios-arrow-forward'/></Button>
+                          <Button  onPress={this.props.nextFn} full success><Text style={styles.proceedButtons}> Pay Now</Text><Icon name='ios-arrow-forward'/></Button>
                         </Col>
                       </Grid>
                     </View>
-
                     <FlatList style={{backgroundColor:'#FFF'}} data={this.state.data} renderItem={this.renderCartItem} keyExtractor={(item, index) => index}/>
 
                   </View>;

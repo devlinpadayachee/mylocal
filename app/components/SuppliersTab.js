@@ -18,17 +18,12 @@ export default class SuppliersTab extends Component {
       data : [],
       suppliers_offering_delivery : [],
       suppliers_offering_delivery_categories : [],
+      suppliers_offering_services : []
     }
   }
   async componentDidMount() {
-    try{
-      console.log("Did Mount: Setting Initial State of Suppliers");
-      this.listenForSuppliers(this.suppliersRef);
-    }
-    catch(error){
-      console.log(error);
-    }
-
+    console.log("Did Mount: Setting Initial State of Suppliers");
+    this.listenForSuppliers(this.suppliersRef);
   }
   componentWillUnmount() {
   }
@@ -43,6 +38,7 @@ export default class SuppliersTab extends Component {
       let suppliers = [];
       let suppliers_offering_delivery = [];
       let suppliers_offering_delivery_categories = [];
+      let suppliers_offering_pickup = [];
 
       snap.forEach((child) => {
         suppliers.push({
@@ -57,11 +53,15 @@ export default class SuppliersTab extends Component {
       });
 
       suppliers_offering_delivery = _.groupBy(suppliers, supplier => supplier.offeringDelivery);
+      console.log(suppliers_offering_delivery)
       suppliers_offering_delivery_categories = _.keys(suppliers_offering_delivery);
+      suppliers_offering_pickup = _.filter(suppliers,function(n) {return n.offeringDelivery != 'service';});
+      console.log(suppliers_offering_pickup)
       this.setState({
         data: suppliers,
         suppliers_offering_delivery : suppliers_offering_delivery,
-        suppliers_offering_delivery_categories : suppliers_offering_delivery_categories
+        suppliers_offering_delivery_categories : suppliers_offering_delivery_categories,
+        suppliers_offering_pickup : suppliers_offering_pickup
       });
     });
   }
@@ -77,6 +77,7 @@ export default class SuppliersTab extends Component {
     const isLoading = this.state.loading
     let suppliers_offering_delivery = this.state.suppliers_offering_delivery;
     let suppliers_offering_delivery_categories = this.state.suppliers_offering_delivery_categories;
+    let suppliers_offering_pickup = this.state.suppliers_offering_pickup;
     let suppliers = this.state.data;
     let content = null;
 
@@ -97,7 +98,22 @@ export default class SuppliersTab extends Component {
             // let categoryheading = category.toUpperCase();
             if (offering_delivery_category == "yes")
             {
-              return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading="DELIVERY" key={index}>
+              return <Tab tabStyle={styles.scrollabletab} activeTextStyle={styles.activetextStyle} textStyle={styles.textStyle} activeTabStyle={styles.activescrollabletab} heading="DELIVERY" key={index}>
+                        <FlatList data={suppliers_offering_delivery[offering_delivery_category]} renderItem={renderSupplierItem} keyExtractor={(item, index) => item.key}/>
+                     </Tab>
+
+            }
+        })
+
+        let serviceslist = suppliers_offering_delivery_categories.map(function(offering_delivery_category, index){
+
+            renderSupplierItem = ({item}) => (
+              <SupplierListItem key={item.key} id={item.key} item={item}/>
+            );
+            // let categoryheading = category.toUpperCase();
+            if (offering_delivery_category == "service")
+            {
+              return <Tab tabStyle={styles.scrollabletab} activeTextStyle={styles.activetextStyle} textStyle={styles.textStyle} activeTabStyle={styles.activescrollabletab} heading="SERVICES" key={index}>
                         <FlatList data={suppliers_offering_delivery[offering_delivery_category]} renderItem={renderSupplierItem} keyExtractor={(item, index) => item.key}/>
                      </Tab>
 
@@ -109,10 +125,10 @@ export default class SuppliersTab extends Component {
 
                     <Tabs renderTabBar={()=> <ScrollableTab />}>
                       {supplierlist}
-                      <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading="PICKUP">
-                                <FlatList data={this.state.data} renderItem={this.renderSupplierItem} keyExtractor={(item, index) => index}/>
+                      <Tab tabStyle={styles.scrollabletab} activeTextStyle={styles.activetextStyle} textStyle={styles.textStyle} activeTabStyle={styles.activescrollabletab} heading="PICKUP">
+                                <FlatList data={this.state.suppliers_offering_pickup} renderItem={this.renderSupplierItem} keyExtractor={(item, index) => index}/>
                       </Tab>
-
+                      {serviceslist}
                     </Tabs>
 
                   </View>;
@@ -146,5 +162,34 @@ const styles = StyleSheet.create({
     flex : 1,
     backgroundColor : '#2c3e50',
     opacity : 0.8,
-  }
+
+  },
+  activetextStyle : {
+    color : '#fff',
+    fontSize : 13,
+    fontWeight : '700'
+  },
+  textStyle: {
+    color : '#fff',
+    fontSize : 12,
+    fontWeight : '700'
+  },
+  col_details : {
+    alignItems : 'center',
+    padding : 10,
+    justifyContent : 'center',
+    backgroundColor : '#ecf0f1'
+  },
+  col_default_text: {
+    color : '#2c3e50',
+    opacity : 0.9,
+    fontSize : 12,
+    fontWeight : '400'
+  },
+  col_header_text: {
+    color : '#2c3e50',
+    opacity : 0.9,
+    fontSize : 13,
+    fontWeight : '500'
+  },
 });

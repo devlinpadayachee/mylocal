@@ -6,6 +6,7 @@ import { Header,H2,H3,Footer,FooterTab,Container,Grid,Col,Card,CardItem, H1,Titl
 import { Actions } from 'react-native-router-flux';
 const Item = Picker.Item;
 import * as cart from '../js/Cart';
+import Display from 'react-native-display';
 var _ = require('lodash')
 const SIZE = 40;
 export default class ProductDetailsScreen extends Component {
@@ -79,44 +80,47 @@ export default class ProductDetailsScreen extends Component {
                       </CardItem>
                       <CardItem style={styles.card_item}>
                         <Body style={styles.slidercontainer}>
-                            <Grid>
-                              <Col style={styles.col_details}>
-                                <Text style={styles.col_header_text} >
-                                Cost/Unit
-                                </Text>
-                                <Text style={styles.col_default_text}>
-                                  R{this.props.product.price}
-                                </Text>
-                              </Col>
-                              <Col style={styles.col_details}>
-                                <Text style={styles.col_header_text} >
-                                Quantity
-                                </Text>
-                                <Text style={styles.col_default_text} >
-                                  {this.state.quantity_value && +this.state.quantity_value.toFixed(0)}
-                                </Text>
-                              </Col>
-                              <Col style={styles.col_details}>
-                                <Text style={styles.col_header_text} >
-                                Total Cost
-                                </Text>
-                                <Text style={styles.col_default_text}>
-                                  R{this.state.total_value.toFixed(0)}
-                                </Text>
-                              </Col>
-                            </Grid>
-                            <View style={styles.slidercontainer}>
-                              <Slider
-                                      minimumTrackTintColor={'#2c3e50'}
-                                      minimumValue={1}
-                                      step={1}
-                                      maximumValue={10}
-                                      style={styles.slider}
-                                      onValueChange={(value) => this.setState({quantity_value: value,total_value:this.props.product.price*value})}
-                              >
+                            <Display enable={true}>
+                              <Grid>
+                                <Col style={styles.col_details}>
+                                  <Text style={styles.col_header_text} >
+                                  Cost/Unit
+                                  </Text>
+                                  <Text style={styles.col_default_text}>
+                                    R{this.props.product.price}
+                                  </Text>
+                                </Col>
+                                <Col style={styles.col_details}>
+                                  <Text style={styles.col_header_text} >
+                                  Quantity
+                                  </Text>
+                                  <Text style={styles.col_default_text} >
+                                    {this.state.quantity_value && +this.state.quantity_value.toFixed(0)}
+                                  </Text>
+                                </Col>
+                                <Col style={styles.col_details}>
+                                  <Text style={styles.col_header_text} >
+                                  Total Cost
+                                  </Text>
+                                  <Text style={styles.col_default_text}>
+                                    R{this.state.total_value.toFixed(0)}
+                                  </Text>
+                                </Col>
+                              </Grid>
 
-                              </Slider>
-                            </View>
+                              <View style={styles.slidercontainer}>
+                                <Slider
+                                        minimumTrackTintColor={'#2c3e50'}
+                                        minimumValue={1}
+                                        step={1}
+                                        maximumValue={10}
+                                        style={styles.slider}
+                                        onValueChange={(value) => this.setState({quantity_value: value,total_value:this.props.product.price*value})}
+                                >
+
+                                </Slider>
+                              </View>
+                            </Display>
                         </Body>
                       </CardItem>
                    </Card>

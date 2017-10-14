@@ -12,11 +12,12 @@ import * as cart from '../js/Cart';
 var _ = require('lodash')
 
 const {height, width} = Dimensions.get('window');
-const SWIPER_HEIGHT = height;
+const SWIPER_HEIGHT = 180;
 export default class CartPaymentScreen extends Component {
 
   constructor(props){
     super(props);
+    this.ordersRef = this.getRef().child('orders');
     this.state = {
       loading: false,
       data : [],
@@ -42,17 +43,58 @@ export default class CartPaymentScreen extends Component {
   componentWillUnmount() {
     console.log("Checkout Screen UnMounted");
   }
-
+  getRef() {
+    return firebaseApp.database().ref();
+  }
   renderCartItem = ({item}) => (
     <CartListItem item={item}/>
   );
 
-  nextPreprocess(){
-    // Save step state for use in other steps of the wizard
-    this.props.saveState(0,{key:'value'})
-       // Go to next step
-    this.props.nextFn()
+  createOrder = async () => {
+    this.setState({
+      loading: true
+    });
+    console.log("searching for user");
+    var user = await firebaseApp.auth().currentUser;
+    var name, email, photoUrl, uid, emailVerified;
+    if (user != null) {
+      name = user.displayName;
+      email = user.email;
+      photoUrl = user.photoURL;
+      emailVerified = user.emailVerified;
+      uid = user.uid;
+      console.log(uid)
+    }
+    var postData = {
+      buyer: uid,
+      cart : await cart.getCart(),
+      cart_total : _.sumBy(await cart.getCart(), 'total'),
+      cart_item_count : await cart.getCartCount(),
+      createdAt : new Date,
+      status : 'Pending'
+    };
+    var newOrderKey = this.ordersRef.push().key;
+    var updates = {};
+    updates[newOrderKey] = postData;
+    AsyncStorage.setItem("cart", "[]");
+    Actions.containerScreen({refresh:{test:Math.random()}});
+    Alert.alert('Thank you for your purchase',"Order Submitted")
+    this.setState({
+      loading: false
+    });
+    // // Log in and display an alert to tell the user what happened.
+    // firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((userData) => {
+    //   this.setState({loading: false});
+    //   Actions.containerScreen({});
+    //   console.log('account created');
+    // }).catch((error) => {
+    //   this.setState({loading: false});
+    //   Alert.alert('Login Failed',error.message)
+    //   console.log(error);
+    // });
+    return this.ordersRef.update(updates);
   }
+
 
   onMomentumScrollEnd(e, state, context) {
        var indexMap = [
@@ -108,8 +150,9 @@ export default class CartPaymentScreen extends Component {
                   </View>
     }
     else {
-        content = <View>
+        content = <View >
                     <View style={styles.info_grid} >
+
                       <Grid>
                         <Col style={styles.col_details}>
                           <Button  onPress={this.props.prevFn} full danger><Icon name='ios-arrow-back'/><Text style={styles.returnButtons}> Cart Summary</Text></Button>
@@ -124,75 +167,79 @@ export default class CartPaymentScreen extends Component {
                         </Col>
                       </Grid>
                     </View>
-                    <Image style={styles.background} source={require('../images/background.png')} resizeMode={'cover'} />
-                    <CreditCard
-                      style = {{alignSelf : 'center',marginTop : 40}}
-                      type={this.state.type}
-                      imageFront={require('../images/card-front.png')}
-                      imageBack={require('../images/card-back.png')}
-                      shiny={false}
-                      bar={false}
-                      focused={this.state.focused}
-                      number={this.state.number}
-                      name={this.state.name}
-                      expiry={this.state.expiry}
-                      cvc={this.state.cvc}/>
-                      <Swiper
-                          style={styles.wrapper}
-                          height={height}
-                          showsButtons={true}
-                          onMomentumScrollEnd = {this.onMomentumScrollEnd.bind(this)}
-                          ref={(swiper) => {this.swiper = swiper}}
-                          index={this.state.index}>
-                          <View style={styles.slide}>
-                              <View style={styles.card}>
-                                  <Text style={styles.textNumber}>CARD NUMBER</Text>
-                                  <TextInput ref="number" keyboardType="phone-pad" autoCorrect={false} autoFocus={true} value={this.state.number} onChangeText={(number) => this.setState({number})}/>
-                              </View>
-                          </View>
-                          <View style={styles.slide}>
-                              <View style={styles.card}>
-                                  <Text style={styles.textName}>CARD HOLDERS NAME</Text>
-                                  <TextInput ref="name"  caretHidden={true} autoCorrect={false} value={this.state.name} onChangeText={(name) => this.setState({name})}/>
-                              </View>
-                          </View>
-                          <View style={styles.slide}>
-                              <View style={styles.card}>
-                                  <Text style={styles.textName}>EXPIRY</Text>
-                                  <TextInput ref="expiry" autoCorrect={false} value={this.state.expiry} onChangeText={(expiry) => this.setState({expiry})}/>
-                              </View>
-                          </View>
-                          <View style={styles.slide}>
-                              <View style={styles.card}>
-                                  <Text style={styles.textCvc}>CVV/CVC NUMBER</Text>
-                                  <TextInput ref="cvc" autoCorrect={false} value={this.state.cvc} onChangeText={(cvc) => this.setState({cvc})}/>
-                              </View>
-                          </View>
-                          <View style={styles.slide}>
-                              <View style={styles.card}>
-                                  <Text style={styles.textNumber}>CARD TYPE</Text>
-                                  <View style={{flexDirection: 'row'}}>
-                                      {cardTypes.map((cardType) => {
-                                          return (
-                                              <TouchableOpacity key={cardType.type} onPress={() => this.setState({type: cardType.type})}>
-                                                  <View>
-                                                      <Image source={{uri: cardType.image}} style={{width: 57, height: 35, marginHorizontal: 5}} />
-                                                  </View>
-                                              </TouchableOpacity>
-                                          );
-                                      })}
+
+                    <View style={styles.container}>
+
+
+                                  <TextInput
+                                    onChangeText={(text) => this.setState({cardnumber: text})}
+                                    value={this.state.email}
+                                    placeholder = "Card Number"
+                                    placeholderTextColor = 'rgba(255,255,255,0.7)'
+                                    returnKeyType = "next"
+                                    onSubmitEditing={() => this.passwordInput.focus()}
+                                    keyboardType = "email-address"
+                                    autoCapitalize="none"
+                                    underlineColorAndroid='transparent'
+                                    autoCorrect={false}
+                                    style={styles.input}
+                                  />
+                                  <TextInput
+                                    onChangeText={(text) => this.setState({password: text})}
+                                    value={this.state.password}
+                                    placeholder = "Card Holder"
+                                    placeholderTextColor = 'rgba(255,255,255,0.7)'
+                                    returnKeyType = "go"
+                                    secureTextEntry
+                                    underlineColorAndroid='transparent'
+                                    ref={(input) => this.passwordInput = input}
+                                    style={styles.input}
+                                  />
+                                  <View style={{flexDirection:'row', justifyContent:"space-around",alignItems:"stretch",}}>
+
+
+                                                <TextInput
+                                                  onChangeText={(text) => this.setState({cardnumber: text})}
+                                                  value={this.state.email}
+                                                  placeholder = "CCV"
+                                                  placeholderTextColor = 'rgba(255,255,255,0.7)'
+                                                  returnKeyType = "next"
+                                                  onSubmitEditing={() => this.passwordInput.focus()}
+                                                  keyboardType = "email-address"
+                                                  autoCapitalize="none"
+                                                  underlineColorAndroid='transparent'
+                                                  autoCorrect={false}
+                                                  style={styles.input}
+                                                />
+                                                <TextInput
+                                                  onChangeText={(text) => this.setState({password: text})}
+                                                  value={this.state.password}
+                                                  placeholder = "Expiry Date"
+                                                  placeholderTextColor = 'rgba(255,255,255,0.7)'
+                                                  returnKeyType = "go"
+                                                  secureTextEntry
+                                                  underlineColorAndroid='transparent'
+                                                  ref={(input) => this.passwordInput = input}
+                                                  style={styles.input}
+                                                />
+
                                   </View>
-                              </View>
-                          </View>
-                      </Swiper>
-                  </View>;
+                                  <TouchableOpacity style={styles.buttonContainer} onPress={this.createOrder}>
+                                    <Text style={styles.buttonText}>COMPLETE PURCHASE</Text>
+                                  </TouchableOpacity>
+                    </View>
+
+                </View>;
     }
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView >
           {content}
         </ScrollView>
     );
   }
+
+
+
 }
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -201,7 +248,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
   	flex : 1,
-    backgroundColor : '#fff',
+    padding : 40
 	},
   info_grid : {
     zIndex : 5,
@@ -212,25 +259,34 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        width: width,
-        height: height
+        width: DEVICE_WIDTH,
+        height: DEVICE_HEIGHT
   },
-  slide: {
-       height: height,
-       justifyContent: 'center',
-       alignItems: 'center'
-   },
-  card: {
-       marginHorizontal: 10,
-       marginBottom: 30,
-       backgroundColor: '#fff',
-       borderRadius: 3,
-       elevation: 3,
-       borderBottomWidth: 1,
-       borderRightWidth: 1,
-       borderColor: '#ddd',
-       padding: 10,
-   },
+  input: {
+    height: 45,
+    backgroundColor : 'rgba(255,255,255,0.2)',
+    margin : 10,
+    color : '#fff',
+    paddingHorizontal : 15,
+    opacity : 1,
+    borderTopRightRadius: 15,
+    fontWeight : '700',
+    flex : 1,
+
+  },
+  buttonContainer :{
+    backgroundColor : '#27ae60',
+    paddingVertical : 15,
+    margin : 10,
+    borderColor: '#fff',
+    borderTopLeftRadius: 15
+
+  },
+  buttonText : {
+    textAlign : 'center',
+    color : "#fff",
+    fontWeight : '700'
+  },
   header:{
     height : 70,
     backgroundColor : '#2c3e50',

@@ -91,7 +91,10 @@ export default class LoginForm extends Component {
     firebaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((userData) => {
       this.setState({loading: false});
       Actions.containerScreen({});
-      console.log('account created');
+      // firebaseApp.auth().setPersistence(firebaseApp.auth.Auth.Persistence.SESSION)
+      // .then(function() {
+      //   console.log("setting session app auth")
+      // });
     }).catch((error) => {
       this.setState({loading: false});
       Alert.alert('Login Failed',error.message)

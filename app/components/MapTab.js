@@ -61,7 +61,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
     );
 
     this.watchId = navigator.geolocation.watchPosition(
@@ -78,7 +78,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
     );
 
   }
@@ -86,14 +86,16 @@ export default class MapTab extends Component {
     navigator.geolocation.clearWatch(this.watchId);
   }
   render() {
+
+    // <Text>User Latitude: {this.state.userlocation.latitude}</Text>
+    // <Text>User Longitude: {this.state.userlocation.longitude}</Text>
+    // <Text>Region Latitude: {this.state.region.latitude}</Text>
+    // <Text>Region Longitude: {this.state.region.longitude}</Text>
+    // <Text>Error: {this.state.error}</Text>
     return (
 
       <View style={styles.container}>
-        <Text>User Latitude: {this.state.userlocation.latitude}</Text>
-        <Text>User Longitude: {this.state.userlocation.longitude}</Text>
-        <Text>Region Latitude: {this.state.region.latitude}</Text>
-        <Text>Region Longitude: {this.state.region.longitude}</Text>
-        <Text>Error: {this.state.error}</Text>
+
         <Icon name="ios-pin" style={styles.absicon}/>
         <Fab
            active={this.state.active}
@@ -153,7 +155,7 @@ export default class MapTab extends Component {
         });
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10 },
     );
   }
 }

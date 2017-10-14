@@ -19,5 +19,15 @@ try {
   console.error('Firebase initialization error', err.stack)
   }
 }
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    console.log(user.email)
+    console.log("user is signed in")
+  } else {
+    console.log("user is signed out")
+  }
+});
+
 const firebaseApp = firebase;
 export default firebaseApp;

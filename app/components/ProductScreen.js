@@ -124,7 +124,7 @@ export default class ProductScreen extends Component {
                 )
             };
             // let categoryheading = category.toUpperCase();
-            return <Tab tabStyle={styles.scrollabletab} activeTabStyle={styles.activescrollabletab} heading={category.toUpperCase()} key={index}>
+            return <Tab tabStyle={styles.scrollabletab} textStyle={styles.textStyle} activeTabStyle={styles.activescrollabletab} heading={category.toUpperCase()} key={index}>
                       <FlatList data={products_by_category[category]} renderItem={renderProductItem} keyExtractor={(item, index) => item.key}/>
                    </Tab>
         })
@@ -196,6 +196,11 @@ const styles = StyleSheet.create({
     flex : 1,
     backgroundColor : '#2c3e50',
     opacity : 0.8,
+  },
+  textStyle: {
+    color : '#fff',
+    fontSize : 12,
+    fontWeight : '700'
   },
   col_details : {
     alignItems : 'center',

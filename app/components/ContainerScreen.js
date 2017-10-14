@@ -6,6 +6,7 @@ import { Header,Footer,FooterTab,Container,Title,Tabs,Tab,TabHeading,Left,Right,
 import { Actions } from 'react-native-router-flux';
 import MapTab from './MapTab';
 import SuppliersTab from './SuppliersTab';
+import OrdersTab from './OrdersTab';
 import ProductsSearchTab from './ProductsSearchTab';
 import usernameImg from '../images/username.png';
 import passwordImg from '../images/password.png';
@@ -56,6 +57,9 @@ export default class ContainerScreen extends Component {
                       </Tab>
                       <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-barcode-outline"  style={styles.icon}/></TabHeading>}>
                         <ProductsSearchTab/>
+                      </Tab>
+                      <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-basket-outline"  style={styles.icon}/></TabHeading>}>
+                        <OrdersTab/>
                       </Tab>
                       <Tab heading={ <TabHeading style= {styles.tab}><Icon name="ios-pin-outline"  style={styles.icon}/></TabHeading>}>
                         <MapTab/>

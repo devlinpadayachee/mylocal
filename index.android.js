@@ -16,7 +16,7 @@ console.ignoredYellowBox = [
 export default class mylocal extends Component {
   render() {
     return (
-      <Root>
+      <Root style={styles.container}>
           <StatusBar
              backgroundColor="#2c3e50"
           />
@@ -29,6 +29,7 @@ export default class mylocal extends Component {
 const styles = StyleSheet.create({
   container: {
     flex : 1,
+    backgroundColor:"#2c3e50"
   }
 });
 
